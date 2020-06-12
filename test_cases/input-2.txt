@@ -1,0 +1,22 @@
+REGISTERS
+R1 16
+R2 16
+R3 20
+R4 2
+R5 8
+R6 8
+MEMORY
+8 12
+16 8
+56 4
+64 8
+72 19
+CODE
+Loop: LD R1, 48(R2)
+      DADD R3, R1, R4
+      SUB R6, R3, R1
+      SD R6, 56(R2)
+      DADDI R4, R4, #10
+      SUBI R2, R2, #8
+      BNEZ R2, Loop
+      SUBI R1, R1, #10
