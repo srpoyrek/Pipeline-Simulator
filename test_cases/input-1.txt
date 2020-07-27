@@ -7,9 +7,9 @@ MEMORY
 8 40
 16 60
 CODE
-      LD R2, 0(R1)
-      DADD R4, R2, R3
-      SD R4, 0(R1)
-      BNEZ R4, NEXT
-      DADDI R2, R1, #8
-NEXT: DADD R1, R1, R3
+	LB R2, 0(R1)
+	ADD R4, R2, R3
+	SB R4, 0(R1)
+	BNE R4, R0, NEXT
+	ADDI R2, R1, #8
+NEXT:	ADD R1, R1, R3
