@@ -179,7 +179,6 @@ def decode_format(line):
         FMT = B
         opcode = 0b1100011
         funct3 = 0x07
-    ## Need to Check form here to 
     elif inst =='JAL':
         FMT = J
         opcode = 0b1101111
@@ -196,30 +195,36 @@ def decode_format(line):
         opcode = 0b0010111
     elif inst =='ECALL':
         FMT = I
-        opcode = 0b1110011
-        funct7 = 0x00
+        imm = 0x01
     elif inst == 'EBREAK':
         FMT = I
-        opcode = 0b1110011
-        funct7 = 0x00
-    #to here
+        imm = 0x01
+        
     if FMT == R:
         rd = int((line[1].split('R')[1]).split(',')[0])
         rs1 = int((line[2].split('R')[1]).split(',')[0])
         rs2 = int((line[3].split('R')[1]).split(',')[0])
         imm = None
     elif FMT == I:
-        rd = int((line[1].split('R')[1]).split(',')[0])
-        rs2 = None
-        if opcode is not 0b0000011:
-            rs1 = int((line[2].split('R')[1]).split(',')[0])
-            imm = int((line[3].split('#')[1]))
-            if funct7 is not None:
-                imm = bin(imm)[5:]
+        if opcode is not 0b111011:
+            rd = int((line[1].split('R')[1]).split(',')[0])
+            rs2 = None
+            if opcode != 0b0000011 and opcode != 0b1101111:
+                rs1 = int((line[2].split('R')[1]).split(',')[0])
+                imm = int((line[3].split('#')[1]))
+                if funct7 is not None:
+                    imm = bin(imm)[5:]
+            else:
+                funct7 = None
+                rs1 = int(((line[2].split('(')[1]).split('R')[1]).split(')')[0])
+                imm = int(line[2].split('(')[0])
         else:
-            funct7 = None
-            rs1 = int(((line[2].split('(')[1]).split('R')[1]).split(')')[0])
-            imm = int(line[2].split('(')[0])
+            rd = None
+            rs1 = None
+            rs2 = None
+            opcode = 0b1110011
+            funct7 = 0x00
+    
     elif FMT == S:
         rd = None
         funct7 = None
@@ -232,18 +237,16 @@ def decode_format(line):
         rs2 = int((line[2].split('R')[1]).split(',')[0])
         imm = None # Needs to write the logic
     elif FMT == J:
-        """
         funct7 = None
         rd = int((line[1].split('R')[1]).split(',')[0])
+        imm = line[2]
+        rs1 = None
         rs2 = None
-        if opcode is 0b1100111:
-            rs1 = int((line[2].split('R')[1]).split(',')[0])
-            imm = int((line[3].split('#')[1]))
-        else:
-        """
-        pass
     elif FMT == U:
         funct3 = None
         funct7 = None
+        rs1 = None
+        rs2 = None
+        rd = int((line[1].split('R')[1]).split(',')[0])
         
     return {"FMT":FMT, "opcode":opcode,"funct3":funct3,"funct7":funct7,"rd":rd, "rs1":rs1 ,"rs2":rs2, "imm":imm,"label":label}

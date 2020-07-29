@@ -51,15 +51,5 @@ def read_file():
                 memory_bank[int(line[0])] = hex(int(line[1].split('\n')[0]))
             if RMC == CODE:
                 #RV32I instructions
-                #print(line)
                 intruction_bank.append(decode_format(line))
-                #print(line)
-    #print(intruction_bank)            
-    #print(register_bank)
-    #print(memory_bank)
     return register_bank, memory_bank, intruction_bank
-            
-        
-        
-#driver code
-#read_file()
